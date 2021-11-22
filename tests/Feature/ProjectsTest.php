@@ -20,13 +20,21 @@ class ProjectsTest extends TestCase
 
 
     /** @test */
-    public function only_auth_users_can_create_projects()
+    public function guess_cannot_create_projects()
     {
         $attributes = Project::factory()->raw();
         $this->post('/projects', $attributes)->assertRedirect("login");
     }
 
 
+        /** @test */
+        public function guess_my_not_view_projects()
+        {
+            $this->get('/projects')->assertRedirect("login");
+        }
+    
+
+        
     /** @test */
     public function a_user_can_create_a_project()
     {
@@ -59,6 +67,7 @@ class ProjectsTest extends TestCase
         $this->actingAs(User::factory()->create());
 
         $attributes = Project::factory()->raw(['description' => ""]);
+
         $this->post('/projects', $attributes)->assertSessionHasErrors(['description']);
     }
 
@@ -70,4 +79,6 @@ class ProjectsTest extends TestCase
 
         $this->get($project->path())->assertSee($project->title)->assertSee($project->description);
     }
+
+    
 }

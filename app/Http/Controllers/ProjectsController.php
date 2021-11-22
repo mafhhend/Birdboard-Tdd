@@ -9,22 +9,21 @@ class ProjectsController extends Controller
 {
     public function index()
     {
-        $projects = Project::all();
+        $projects = auth()->user()->projects;
         return view("projects.index", compact("projects"));
     }
     public function store()
     {
-        $attributes = request()->validate([
+         auth()->user()->projects()->create(request()->validate([
             'title' => "required",
             "description" => "required",
-            'owner_id'=>"required"
-        ]);
-        $attributes['owner_id']=auth()->user()->id;
-        Project::create($attributes);
+        ]));
+
         return redirect('/projects');
     }
     public function show(Project $project)
     {
         return view("projects.show", compact("project"));
     }
+    
 }
