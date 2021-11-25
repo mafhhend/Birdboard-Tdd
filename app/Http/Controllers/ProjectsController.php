@@ -14,6 +14,7 @@ class ProjectsController extends Controller
     }
     public function store()
     {
+
          auth()->user()->projects()->create(request()->validate([
             'title' => "required",
             "description" => "required",
@@ -23,6 +24,9 @@ class ProjectsController extends Controller
     }
     public function show(Project $project)
     {
+        if(auth()->user()->isNot($project->owner)) abort("403");
+
+
         return view("projects.show", compact("project"));
     }
     
